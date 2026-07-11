@@ -7,8 +7,10 @@ const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
   PORT: z.coerce.number().int().positive().default(3004),
   DATABASE_URL: z.string().url('DATABASE_URL must be a valid connection URL'),
+  STELLAR_NETWORK: z.enum(['testnet', 'mainnet']).default('testnet'),
   STELLAR_RPC_URL: z.string().url().default('https://soroban-testnet.stellar.org'),
   STELLAR_NETWORK_PASSPHRASE: z.string().default('Test SDF Network ; September 2015'),
+  LOG_LEVEL: z.string().default('info'),
   CORS_ORIGINS: z.string().default('http://localhost:3000'),
   HARVEST_CRON: z.string().default('0 */6 * * *'),
   PRICE_UPDATE_CRON: z.string().default('*/5 * * * *'),
@@ -19,6 +21,7 @@ const envSchema = z.object({
   FEE_DISTRIBUTOR_ID: z.string().default(''),
   PRICE_ORACLE_ID: z.string().default(''),
   VAULT_UNDERLYING_ASSET: z.string().default(''),
+  ADMIN_API_KEY: z.string().default(''),
 });
 
 export type Env = z.infer<typeof envSchema>;

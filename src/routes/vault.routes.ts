@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import * as c from '../controllers/vault.controller';
 import { validateBody } from '../middleware/validate';
+import { requireApiKey } from '../middleware/auth';
 import { z } from 'zod';
 
 const router = Router();
@@ -19,6 +20,6 @@ router.get ('/depositor/:address',c.getDepositorInfo);
 router.post('/deposit',  validateBody(DepositSchema),  c.deposit);
 router.post('/redeem',   validateBody(RedeemSchema),   c.redeem);
 router.post('/withdraw', validateBody(DepositSchema),  c.withdraw); // SEP-56 withdraw(assets,...)
-router.post('/harvest',  validateBody(HarvestSchema),  c.triggerHarvest);
+router.post('/harvest',  requireApiKey, validateBody(HarvestSchema),  c.triggerHarvest);
 
 export default router;

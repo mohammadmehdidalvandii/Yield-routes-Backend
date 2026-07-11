@@ -22,6 +22,7 @@ const preset = NETWORK_PRESETS[STELLAR_NETWORK];
 
 export const config = {
   PORT: parseInt(process.env.PORT ?? '3004', 10),
+  LOG_LEVEL: process.env.LOG_LEVEL ?? 'info',
   DATABASE_URL: process.env.DATABASE_URL ?? '',
 
   // Network — set STELLAR_NETWORK=mainnet to switch everything at once.
@@ -39,6 +40,7 @@ export const config = {
   FEE_DISTRIBUTOR_ID: process.env.FEE_DISTRIBUTOR_ID ?? '',
   PRICE_ORACLE_ID: process.env.PRICE_ORACLE_ID ?? '',
   VAULT_UNDERLYING_ASSET: process.env.VAULT_UNDERLYING_ASSET ?? '',
+  ADMIN_API_KEY: process.env.ADMIN_API_KEY ?? '',
 
   INDEXER_STARTING_LEDGER: parseInt(process.env.INDEXER_STARTING_LEDGER ?? '0', 10),
   CORS_ORIGINS: (process.env.CORS_ORIGINS ?? 'http://localhost:3000').split(','),

@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import * as c from '../controllers/pool.controller';
 import { validateBody } from '../middleware/validate';
+import { requireApiKey } from '../middleware/auth';
 import { z } from 'zod';
 
 const router = Router();
@@ -13,7 +14,7 @@ const RegisterSchema = z.object({
 
 router.get ('/',                      c.listPools);
 router.get ('/:tokenA/:tokenB',       c.getPool);
-router.post('/register', validateBody(RegisterSchema), c.registerPool);
-router.delete('/:id',                 c.deregisterPool);
+router.post('/register', requireApiKey, validateBody(RegisterSchema), c.registerPool);
+router.delete('/:id',                 requireApiKey, c.deregisterPool);
 
 export default router;
