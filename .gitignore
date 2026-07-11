@@ -1,0 +1,24 @@
+# Node
+node_modules/
+dist/
+*.log
+npm-debug.log*
+
+# Prisma
+prisma/*.db
+prisma/migrations/dev/
+
+# Env — never commit real secrets or contract IDs
+.env
+.env.local
+.env.deployed
+!.env.example
+
+# OS
+.DS_Store
+*.swp
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/

@@ -1,0 +1,18 @@
+# YieldRoutes stellar.toml — SEP-1 Service Discovery
+
+NETWORK_PASSPHRASE = "Test SDF Network ; September 2015"
+ACCOUNTS           = []
+SIGNING_KEY        = ""
+
+[DOCUMENTATION]
+ORG_NAME        = "YieldRoutes"
+ORG_URL         = "https://yieldroutes.io"
+ORG_DESCRIPTION = "SEP-56 compliant DEX aggregator and yield vault on Stellar"
+ORG_GITHUB      = "https://github.com/yield-routes/yield-routes"
+
+[[CURRENCIES]]
+code             = "USDC"
+issuer           = "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5"
+status           = "test"
+is_asset_anchored = false
+desc             = "USD Coin (Circle testnet)"

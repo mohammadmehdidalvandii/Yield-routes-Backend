@@ -1,0 +1,40 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: yieldroutes
+      POSTGRES_PASSWORD: yieldroutes
+      POSTGRES_DB: yieldroutes
+    ports: ["5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -U yieldroutes"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  stellar-sandbox:
+    image: stellar/quickstart:latest
+    ports: ["8000:8000"]
+    command: "--standalone --enable-soroban-rpc"
+    healthcheck:
+      test: ["CMD","curl","-sf","http://localhost:8000/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+  backend:
+    build: { context: ./backend, dockerfile: Dockerfile }
+    environment:
+      DATABASE_URL: postgresql://yieldroutes:yieldroutes@postgres:5432/yieldroutes
+      STELLAR_RPC_URL: http://stellar-sandbox:8000/soroban/rpc
+      STELLAR_NETWORK_PASSPHRASE: "Standalone Network ; February 2017"
+      PORT: "3004"
+    ports: ["3004:3004"]
+    depends_on:
+      postgres: { condition: service_healthy }
+      stellar-sandbox: { condition: service_healthy }
+
+volumes:
+  pgdata:

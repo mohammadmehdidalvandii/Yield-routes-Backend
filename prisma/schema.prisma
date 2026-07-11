@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model RouteQuote {
+  id              String   @id @default(uuid())
+  onChainId       Int      @unique @default(autoincrement())
+  tokenIn         String
+  tokenOut        String
+  amountIn        Float
+  expectedOut     Float
+  priceImpactBps  Int      @default(0)
+  protocolFee     Float    @default(0)
+  validUntil      DateTime
+  executed        Boolean  @default(false)
+  executedOut     Float?
+  createdAt       DateTime @default(now())
+}
+
+model VaultDeposit {
+  id          String   @id @default(uuid())
+  depositor   String
+  tokenId     String
+  amount      Float
+  sharesIssued Float
+  txHash      String?
+  createdAt   DateTime @default(now())
+}
+
+model VaultWithdrawal {
+  id          String   @id @default(uuid())
+  depositor   String
+  shares      Float
+  amountOut   Float
+  txHash      String?
+  createdAt   DateTime @default(now())
+}
+
+model HarvestEvent {
+  id            String   @id @default(uuid())
+  yieldAmount   Float
+  totalAssets   Float
+  sharePrice    Float
+  txHash        String?
+  harvestedAt   DateTime @default(now())
+}
+
+model PriceSnapshot {
+  id          String   @id @default(uuid())
+  baseToken   String
+  quoteToken  String
+  price       Float
+  twapPrice   Float
+  reporter    String
+  recordedAt  DateTime @default(now())
+
+  @@index([baseToken, quoteToken, recordedAt])
+}
+
+model RegisteredPool {
+  id          String   @id @default(uuid())
+  tokenA      String
+  tokenB      String
+  poolAddress String
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  @@unique([tokenA, tokenB])
+}
+
+model FeeDistribution {
+  id              String   @id @default(uuid())
+  totalAmount     Float
+  toTreasury      Float
+  toVault         Float
+  toLpRewards     Float
+  txHash          String?
+  distributedAt   DateTime @default(now())
+}
+
+model IndexerCursor {
+  id    Int    @id @default(1)
+  ledger Int   @default(0)
+}

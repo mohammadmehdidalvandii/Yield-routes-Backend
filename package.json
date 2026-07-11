@@ -1,0 +1,50 @@
+{
+  "name": "@yield-routes/backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "YieldRoutes API: DEX routing, yield vault management, fee distribution",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_ORG/yield-routes-backend.git"
+  },
+  "keywords": ["stellar", "soroban", "defi", "sep-56", "yield-vault", "dex-aggregator"],
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "jest --coverage --runInBand",
+    "lint": "eslint src --ext .ts",
+    "db:migrate": "prisma migrate dev",
+    "db:generate": "prisma generate",
+    "db:seed": "ts-node src/scripts/seed.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.14.0",
+    "@stellar/stellar-sdk": "^12.3.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.3.1",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0",
+    "node-cron": "^3.0.3",
+    "winston": "^3.13.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/jest": "^29.5.12",
+    "@types/morgan": "^1.9.9",
+    "@types/node": "^20.14.2",
+    "@types/node-cron": "^3.0.11",
+    "jest": "^29.7.0",
+    "prisma": "^5.14.0",
+    "ts-jest": "^29.1.4",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.4.5",
+    "supertest": "^7.0.0",
+    "@types/supertest": "^6.0.2"
+  }
+}
