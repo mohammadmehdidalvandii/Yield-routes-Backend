@@ -60,7 +60,8 @@ jest.mock('../services/stellar.service', () => ({
     getVaultShares: jest.fn().mockResolvedValue(0),
     vaultDeposit: jest.fn().mockResolvedValue({ tokenId: 'USDC', sharesIssued: 1000, txHash: 'tx' }),
     vaultWithdraw: jest.fn().mockResolvedValue({ amountOut: 1000, txHash: 'tx' }),
-    harvestVault: jest.fn().mockResolvedValue({ yieldAmount: 50, totalAssets: 1050, sharePrice: 1_050_000_000, txHash: 'tx' }),
+    harvestVault: jest.fn().mockResolvedValue({ netYield: 50, totalAssets: 1050, txHash: 'tx' }),
+    estimateGrossYield: jest.fn().mockResolvedValue(500),
     getOracleTwap: jest.fn().mockResolvedValue(0),
   })),
 }));

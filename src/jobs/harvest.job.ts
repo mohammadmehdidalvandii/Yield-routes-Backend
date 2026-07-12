@@ -13,20 +13,21 @@ export function startHarvestCron(): void {
   cron.schedule(config.HARVEST_CRON, async () => {
     logger.info('Running scheduled harvest...');
     try {
-      const result = await stellar.harvestVault();
-      if (result.yieldAmount > 0) {
-        await prisma.harvestEvent.create({
-          data: {
-            yieldAmount: result.yieldAmount,
-            totalAssets: result.totalAssets,
-            sharePrice: result.sharePrice,
-            txHash: result.txHash,
-          },
-        });
-        logger.info('Harvest complete', { yieldAmount: result.yieldAmount });
-      } else {
+      const grossYield = await stellar.estimateGrossYield();
+      if (grossYield <= 0) {
         logger.info('Harvest: no yield to collect this cycle');
+        return;
       }
+      const result = await stellar.harvestVault(grossYield);
+      await prisma.harvestEvent.create({
+        data: {
+          yieldAmount: result.netYield,
+          totalAssets: result.totalAssets,
+          sharePrice: 0,
+          txHash: result.txHash,
+        },
+      });
+      logger.info('Harvest complete', { netYield: result.netYield });
     } catch (err: any) {
       logger.error('Harvest cron failed', { err: err.message });
     }

@@ -118,6 +118,13 @@ export class StellarService {
     return { sharesBurned: assets, txHash: 'placeholder' };
   }
 
+  async estimateGrossYield(): Promise<number> {
+    // In production this would simulate the vault's accrued yield since
+    // the last harvest. For now, return 0 in stub mode — the harvest
+    // cron checks this before calling harvestVault.
+    return 0;
+  }
+
   async harvestVault(grossYield: number) {
     logger.info('Triggering harvest', { grossYield });
     return { netYield: grossYield * 0.9, totalAssets: 0, txHash: 'placeholder' }; // 10% perf fee assumed
