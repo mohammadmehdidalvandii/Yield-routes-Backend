@@ -1,5 +1,5 @@
 import request from 'supertest';
-import app from '../index';
+import app from '../app';
 
 jest.mock('@prisma/client', () => {
   const mockPrisma = {
@@ -17,16 +17,17 @@ jest.mock('@prisma/client', () => {
     },
     vaultDeposit: {
       findMany: jest.fn().mockResolvedValue([]),
-      create: jest.fn(),
+      create: jest.fn().mockImplementation((args) => Promise.resolve({ id: 'uuid-deposit', ...args.data, createdAt: new Date() })),
       count: jest.fn().mockResolvedValue(0),
     },
     vaultWithdrawal: {
       findMany: jest.fn().mockResolvedValue([]),
-      create: jest.fn(),
+      create: jest.fn().mockImplementation((args) => Promise.resolve({ id: 'uuid-withdrawal', ...args.data, createdAt: new Date() })),
+      count: jest.fn().mockResolvedValue(0),
     },
     harvestEvent: {
       findMany: jest.fn().mockResolvedValue([]),
-      create: jest.fn(),
+      create: jest.fn().mockImplementation((args) => Promise.resolve({ id: 'uuid-harvest', ...args.data, harvestedAt: new Date() })),
       aggregate: jest.fn().mockResolvedValue({ _sum: { yieldAmount: 0 } }),
     },
     priceSnapshot: {
@@ -53,13 +54,17 @@ jest.mock('../services/stellar.service', () => ({
   StellarService: jest.fn().mockImplementation(() => ({
     getRouteQuote: jest.fn().mockResolvedValue({ expectedOut: 997, priceImpactBps: 5, protocolFee: 1, legs: [] }),
     executeRoute: jest.fn().mockResolvedValue({ actualOut: 997, slippageBps: 0, txHash: 'tx' }),
-    getVaultTotalAssets: jest.fn().mockResolvedValue(0),
-    getVaultTotalShares: jest.fn().mockResolvedValue(0),
-    getVaultSharePrice: jest.fn().mockResolvedValue(1_000_000_000),
-    getVaultHarvestCount: jest.fn().mockResolvedValue(0),
-    getVaultShares: jest.fn().mockResolvedValue(0),
-    vaultDeposit: jest.fn().mockResolvedValue({ tokenId: 'USDC', sharesIssued: 1000, txHash: 'tx' }),
-    vaultWithdraw: jest.fn().mockResolvedValue({ amountOut: 1000, txHash: 'tx' }),
+    totalAssets: jest.fn().mockResolvedValue(0),
+    totalShares: jest.fn().mockResolvedValue(0),
+    getHarvestCount: jest.fn().mockResolvedValue(0),
+    isVaultPaused: jest.fn().mockResolvedValue(false),
+    queryAsset: jest.fn().mockResolvedValue('USDC'),
+    sharesBalance: jest.fn().mockResolvedValue(0),
+    previewDeposit: jest.fn().mockResolvedValue(1000),
+    previewRedeem: jest.fn().mockResolvedValue(1000),
+    vaultDeposit: jest.fn().mockResolvedValue({ sharesIssued: 1000, txHash: 'tx' }),
+    vaultRedeem: jest.fn().mockResolvedValue({ assetsOut: 1000, txHash: 'tx' }),
+    vaultWithdraw: jest.fn().mockResolvedValue({ sharesBurned: 1000, txHash: 'tx' }),
     harvestVault: jest.fn().mockResolvedValue({ netYield: 50, totalAssets: 1050, txHash: 'tx' }),
     estimateGrossYield: jest.fn().mockResolvedValue(500),
     getOracleTwap: jest.fn().mockResolvedValue(0),
